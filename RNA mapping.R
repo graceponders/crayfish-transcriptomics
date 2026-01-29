@@ -7,7 +7,7 @@
 #packages
 pacman::p_load(ggplot2, 
                tidyverse,
-               wesanderson)
+               rlang)
 
 
 # significant DEGs --------------------------------------------------------
@@ -75,23 +75,19 @@ dat_long <- dat %>%
     names_to = "Sample",
     values_to = "Expression")
 
-#log correction
-dat_long <- dat_long %>%
-  mutate(log_expr = log10(Expression + 1))
-
 #z score correction
 dat_long <- dat_long %>%
   group_by(Name) %>%
-  mutate(z_expr = as.numeric(scale(log_expr))) %>%
+  mutate(z_expr = as.numeric(scale(Expression))) %>%
   ungroup()
 
 #Plot heatmap
 ggplot(dat_long, aes(x = Sample, y = Name, fill = z_expr)) +
   geom_tile() +
   scale_fill_gradient2(
-    low = "#3A9AB2",
+    low = "#1d4f65",
     mid = "white",
-    high = "#DCCB4E",
+    high = "#F2b949",
     midpoint = 0,
     name = "Z-score"  ) 
 
@@ -112,7 +108,7 @@ df_long <- df %>%
 ggplot(df_long, aes(x = Tissue, y = Count, fill = Regulation)) +
   geom_col(width = 0.7) +
   scale_fill_manual(
-    values = c("upregulated" = "#DCCB4E", "downregulated" = "#3A9AB2"),
+    values = c("upregulated" = "#F2b949", "downregulated" = "#1d4f65"),
     name = "Expression") +
   labs(
     x = "Tissue",
@@ -120,4 +116,5 @@ ggplot(df_long, aes(x = Tissue, y = Count, fill = Regulation)) +
   theme_classic() 
 
 #done!
+
 
